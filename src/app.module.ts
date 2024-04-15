@@ -1,12 +1,11 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { MarvelModule } from './marvel/marvel.module';
 import { MongooseModule } from '@nestjs/mongoose';
+import { CharactersModule } from './characters/characters.module';
+import { ComicsModule } from './comics/comics.module';
 
 @Module({
-  imports: [MarvelModule, MongooseModule.forRoot('mongodb://localhost/nest')],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [MongooseModule.forRoot('mongodb+srv://Prisco:prisco123@cluster0.wq0eeik.mongodb.net/'), CharactersModule, ComicsModule],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}

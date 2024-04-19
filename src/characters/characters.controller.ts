@@ -7,12 +7,12 @@ import { UpdateCharacterDto } from './dto/update-character.dto';
 export class CharactersController {
   constructor(private readonly charactersService: CharactersService) {}
 
-  @Post('api')
-  createApiJson(){
-    return this.charactersService.createApiJson();
+  @Post()
+  create(@Body() createCharacterDto:CreateCharacterDto){
+    return this.charactersService.create(createCharacterDto)
   }
   
-  @Post()
+  @Get('api')
   createCharacters(){
     return this.charactersService.createCharacters()
   }
@@ -28,8 +28,8 @@ export class CharactersController {
     return this.charactersService.findOne(id);
     }
 
-  @Get('name/:name')
-  findByName(@Param('name') name: string) {
+  @Get('name')
+  findByName(@Body('name') name: string) {
     return this.charactersService.findByName(name);
     }
 

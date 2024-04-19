@@ -15,6 +15,11 @@ const KEY = "ts=1&apikey=90dcd23a80e3b1b433dbd0ed1131367c&hash=80dc4fa8d95909e43
 export class ComicsService {
   constructor(@InjectModel(Comic.name) private comicModel: Model<ComicDocument>) { }
 
+  async create(createComicDto:CreateComicDto): Promise<ComicInterface>{
+    const comic = new this.comicModel(createComicDto);
+    return comic.save();
+  }
+
   async createComics() {
     try {
       const apiMarvel = JSON.parse(await readFile('MarvelAPI.json', 'utf-8'))
@@ -51,7 +56,6 @@ export class ComicsService {
     return this.comicModel.findById(id).exec();
   }
 
-
   findAll() {
     return this.comicModel.find().exec();
   }
@@ -59,7 +63,6 @@ export class ComicsService {
   findByTitle(title: string): Promise<ComicInterface> {
     return this.comicModel.findOne({ title: title }).exec();
   }
-
 
   update(id: string, updateComicDto: UpdateComicDto) {
     return this.comicModel.findByIdAndUpdate({_id: id,}, {$set: updateComicDto}, {new: true}).exec();

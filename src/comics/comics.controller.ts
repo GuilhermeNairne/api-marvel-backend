@@ -8,6 +8,11 @@ export class ComicsController {
   constructor(private readonly comicsService: ComicsService) {}
 
   @Post()
+  create(@Body() createComicDto:CreateComicDto){
+    return this.comicsService.create(createComicDto)
+  }
+
+  @Get('api')
   createComics(){
     return this.comicsService.createComics();
   }

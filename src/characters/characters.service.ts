@@ -5,7 +5,7 @@ import { Character, CharacterDocument } from './schema/Character.schema';
 import { CharacterInterface } from './interface/character.interface';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
-import { writeFile, readFile } from 'fs/promises';
+import { readFile } from 'fs/promises';
 
 const KEY = "ts=1&apikey=90dcd23a80e3b1b433dbd0ed1131367c&hash=80dc4fa8d95909e43f46ffdf1681b024"
 
@@ -13,18 +13,12 @@ const KEY = "ts=1&apikey=90dcd23a80e3b1b433dbd0ed1131367c&hash=80dc4fa8d95909e43
 export class CharactersService {
   constructor(@InjectModel(Character.name) private characterModel: Model<CharacterDocument>) { }
 
-  async createApiJson() {
-    try {
-      const apiMarvel = await fetch('http://gateway.marvel.com/v1/public/series/1067?ts=1&apikey=90dcd23a80e3b1b433dbd0ed1131367c&hash=80dc4fa8d95909e43f46ffdf1681b024')
-      apiMarvel.json().then(item => {
-        writeFile('MarvelAPI.json', JSON.stringify(item, null, 2))
-      })
-      return 'Arquivo Json Criado'
-    } catch (error) {
-      console.error('Ocorreu um erro:', error);
-      throw new HttpException('Erro ao criar arquivo JSON', HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+  async create(createCharacterDto:CreateCharacterDto): Promise<CharacterInterface>{
+    const character = new this.characterModel(createCharacterDto);
+    return character.save();
   }
+
+
 
   async createCharacters() {
     try {
@@ -35,7 +29,7 @@ export class CharactersService {
       const result = Promise.all(characters.data.results.map(async (item) => {
         if (!allPerson.find(char => char.name === item.name)) {
           const character = new this.characterModel(
-            {
+              {
               name: item.name,
               description: item.description,
               urlImage: item.thumbnail.path + ".jpg",

@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { ComicsService } from './comics.service';
 import { CreateComicDto } from './dto/create-comic.dto';
 import { UpdateComicDto } from './dto/update-comic.dto';
+import { SearchComicDTO } from './dto/search-comic.dto';
 
 @Controller('comics')
 export class ComicsController {
@@ -30,6 +31,11 @@ export class ComicsController {
   @Get('title')
   findByName(@Body ('title') title: string) {
     return this.comicsService.findByTitle(title);
+    }
+
+  @Get('search')
+  searchTitle(@Body() searchComicDTO: SearchComicDTO) {
+    return this.comicsService.searchTitle(searchComicDTO.titles);
     }
 
   @Patch(':id')

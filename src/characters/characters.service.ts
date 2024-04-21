@@ -13,7 +13,7 @@ const KEY = "ts=1&apikey=90dcd23a80e3b1b433dbd0ed1131367c&hash=80dc4fa8d95909e43
 export class CharactersService {
   constructor(@InjectModel(Character.name) private characterModel: Model<CharacterDocument>) { }
 
-  async create(createCharacterDto:CreateCharacterDto): Promise<CharacterInterface>{
+  async create(createCharacterDto: CreateCharacterDto): Promise<CharacterInterface> {
     const character = new this.characterModel(createCharacterDto);
     return character.save();
   }
@@ -29,7 +29,7 @@ export class CharactersService {
       const result = Promise.all(characters.data.results.map(async (item) => {
         if (!allPerson.find(char => char.name === item.name)) {
           const character = new this.characterModel(
-              {
+            {
               name: item.name,
               description: item.description,
               urlImage: item.thumbnail.path + ".jpg",
@@ -59,16 +59,20 @@ export class CharactersService {
     return this.characterModel.find().exec();
   }
 
+  searchNames(names: string[]): Promise<CharacterInterface[]> {
+    return this.characterModel.find({ name: { $in: names } }).exec();
+  }
+
   findByName(name: string): Promise<CharacterInterface> {
     return this.characterModel.findOne({ name: name }).exec();
   }
 
 
   update(id: string, updateCharacterDto: UpdateCharacterDto) {
-    return this.characterModel.findByIdAndUpdate({_id: id,}, {$set: updateCharacterDto}, {new: true}).exec();
+    return this.characterModel.findByIdAndUpdate({ _id: id, }, { $set: updateCharacterDto }, { new: true }).exec();
   }
 
   remove(id: string) {
-    return this.characterModel.deleteOne({_id: id}).exec();
+    return this.characterModel.deleteOne({ _id: id }).exec();
   }
 }

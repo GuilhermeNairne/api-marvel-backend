@@ -5,7 +5,6 @@ import { Comic, ComicDocument } from './schema/comic.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { readFile } from 'fs/promises';
-import { stringify } from 'querystring';
 import { ComicInterface } from './interface/comic.interface';
 
 const KEY = "ts=1&apikey=90dcd23a80e3b1b433dbd0ed1131367c&hash=80dc4fa8d95909e43f46ffdf1681b024"
@@ -62,6 +61,10 @@ export class ComicsService {
 
   findByTitle(title: string): Promise<ComicInterface> {
     return this.comicModel.findOne({ title: title }).exec();
+  }
+
+  searchTitle(titles: string[]): Promise<ComicInterface[]> {
+    return this.comicModel.find({ title: {$in: titles} }).exec();
   }
 
   update(id: string, updateComicDto: UpdateComicDto) {
